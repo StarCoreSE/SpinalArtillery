@@ -194,11 +194,11 @@ namespace SpinalArtillery.CoreParts
                 ByBlockHit = new ByBlockHitDef
                 {
                     Enable = true,
-                    Radius = 5f, // Meters
-                    Damage = 5f,
+                    Radius = 1f, // Radius of AOE effect, in meters.
+                    Damage = 1f,
                     Depth = 1f, // Max depth of AOE effect, in meters. 0=disabled, and AOE effect will reach to a depth of the radius value
-                    MaxAbsorb = 64000f, // Soft cutoff for damage (total, against shields or grids), except for pooled falloff.  If pooled falloff, limits max damage per block.
-                    Falloff = Pooled, //.NoFalloff applies the same damage to all blocks in radius
+                    MaxAbsorb = float.MaxValue, // Soft cutoff for damage (total, against shields or grids), except for pooled falloff.  If pooled falloff, limits max damage per block.
+                    Falloff = Linear, //.NoFalloff applies the same damage to all blocks in radius
                     //.Linear drops evenly by distance from center out to max radius
                     //.Curve drops off damage sharply as it approaches the max radius
                     //.InvCurve drops off sharply from the middle and tapers to max radius
@@ -209,12 +209,12 @@ namespace SpinalArtillery.CoreParts
                 },
                 EndOfLife = new EndOfLifeDef
                 {
-                    Enable = true,
-                    Radius = 5f, // Radius of AOE effect, in meters.
-                    Damage = 5f,
+                    Enable = false,
+                    Radius = 1f, // Radius of AOE effect, in meters.
+                    Damage = 1f,
                     Depth = 1f, // Max depth of AOE effect, in meters. 0=disabled, and AOE effect will reach to a depth of the radius value
-                    MaxAbsorb = 64000f, // Soft cutoff for damage (total, against shields or grids), except for pooled falloff.  If pooled falloff, limits max damage per block.
-                    Falloff = Pooled, //.NoFalloff applies the same damage to all blocks in radius
+                    MaxAbsorb = float.MaxValue, // Soft cutoff for damage (total, against shields or grids), except for pooled falloff.  If pooled falloff, limits max damage per block.
+                    Falloff = Linear, //.NoFalloff applies the same damage to all blocks in radius
                     //.Linear drops evenly by distance from center out to max radius
                     //.Curve drops off damage sharply as it approaches the max radius
                     //.InvCurve drops off sharply from the middle and tapers to max radius
