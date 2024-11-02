@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using VRageMath;
-using static SpinalArtillery.Communication.DefinitionDefs;
+using static SpinalArtillery.ModularAssemblies.Communication.DefinitionDefs;
 
-namespace SpinalArtillery
+namespace SpinalArtillery.ModularAssemblies
 {
     /* Hey there modders!
      *

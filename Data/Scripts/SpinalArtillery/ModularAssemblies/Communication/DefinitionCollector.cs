@@ -1,8 +1,8 @@
-﻿using SpinalArtillery.Communication;
-using static SpinalArtillery.Communication.DefinitionDefs;
+﻿using SpinalArtillery.ModularAssemblies.Communication;
+using static SpinalArtillery.ModularAssemblies.Communication.DefinitionDefs;
 
 // ReSharper disable once CheckNamespace
-namespace SpinalArtillery
+namespace SpinalArtillery.ModularAssemblies
 {
     internal partial class ModularDefinition
     {
@@ -20,7 +20,7 @@ namespace SpinalArtillery
         /// <param name="baseDefs"></param>
         internal static ModularDefinitionContainer GetBaseDefinitions()
         {
-            return new ModularDefinition().Container;
+            return new ModularAssemblies.ModularDefinition().Container;
         }
     }
 }

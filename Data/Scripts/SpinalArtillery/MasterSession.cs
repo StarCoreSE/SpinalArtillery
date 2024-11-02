@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using Sandbox.Game.GUI.DebugInputComponents;
-using SpinalArtillery.Communication;
+using SpinalArtillery.API;
+using SpinalArtillery.ModularAssemblies.Communication;
 using VRage.Game.Components;
 using VRage.Game.ModAPI;
 using VRage.Utils;
@@ -13,6 +14,7 @@ namespace SpinalArtillery
     public class MasterSession : MySessionComponentBase
     {
         public static MasterSession I;
+        public WcApi WcApi = new WcApi();
 
         public readonly Dictionary<int, SpinalArtilleryAssembly> AllWeapons =
             new Dictionary<int, SpinalArtilleryAssembly>();
@@ -22,6 +24,7 @@ namespace SpinalArtillery
         public override void LoadData()
         {
             I = this;
+            WcApi.Load();
         }
 
         public override void UpdateAfterSimulation()
@@ -43,6 +46,7 @@ namespace SpinalArtillery
         {
             foreach (var weapon in AllWeapons)
                 weapon.Value.Close();
+            WcApi.Unload();
             I = null;
         }
 

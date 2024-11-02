@@ -1,4 +1,4 @@
-﻿namespace SpinalArtillery
+﻿namespace SpinalArtillery.ModularAssemblies
 {
     internal partial class ModularDefinition
     {

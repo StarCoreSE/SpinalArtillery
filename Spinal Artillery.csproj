@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Scripts\SpinalArtillery\API\" />
+    <Folder Include="Data\Scripts\SpinalArtillery\CoreSystems\" />
   </ItemGroup>
 
 </Project>
