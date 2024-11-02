@@ -4,7 +4,7 @@
     {
         internal ModularDefinition()
         {
-            LoadDefinitions(ExampleDefinition);
+            LoadDefinitions(SpinalArtilleryDefinition);
         }
     }
 }

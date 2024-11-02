@@ -15,4 +15,8 @@
     <PackageReference Include="Mal.Mdk2.References" Version="*" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Scripts\SpinalArtillery\API\" />
+  </ItemGroup>
+
 </Project>
