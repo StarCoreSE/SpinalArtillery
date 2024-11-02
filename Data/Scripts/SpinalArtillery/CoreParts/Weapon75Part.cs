@@ -5,9 +5,6 @@ using static SpinalArtillery.CoreParts.Structure.WeaponDefinition.HardPointDef;
 using static SpinalArtillery.CoreParts.Structure.WeaponDefinition.HardPointDef.Prediction;
 using static SpinalArtillery.CoreParts.Structure.WeaponDefinition.TargetingDef.BlockTypes;
 using static SpinalArtillery.CoreParts.Structure.WeaponDefinition.TargetingDef.Threat;
-using static SpinalArtillery.CoreParts.Structure.WeaponDefinition.TargetingDef;
-using static SpinalArtillery.CoreParts.Structure.WeaponDefinition.TargetingDef.CommunicationDef.Comms;
-using static SpinalArtillery.CoreParts.Structure.WeaponDefinition.TargetingDef.CommunicationDef.SecurityMode;
 using static SpinalArtillery.CoreParts.Structure.WeaponDefinition.HardPointDef.HardwareDef;
 using static SpinalArtillery.CoreParts.Structure.WeaponDefinition.HardPointDef.HardwareDef.HardwareType;
 
@@ -20,72 +17,43 @@ namespace SpinalArtillery.CoreParts {
             {
                 MountPoints = new[] {
                     new MountPointDef {
-                        SubtypeId = "PDCTurretLB", // Block Subtypeid. Your Cubeblocks contain this information
-                        SpinPartId = "Boomsticks", // For weapons with a spinning barrel such as Gatling Guns. Subpart_Boomsticks must be written as Boomsticks.
-                        MuzzlePartId = "Boomsticks", // The subpart where your muzzle empties are located. This is often the elevation subpart. Subpart_Boomsticks must be written as Boomsticks.
+                        SubtypeId = "SpinalBreech", // Block Subtypeid. Your Cubeblocks contain this information
+                        SpinPartId = "None", // For weapons with a spinning barrel such as Gatling Guns. Subpart_Boomsticks must be written as Boomsticks.
+                        MuzzlePartId = "None", // The subpart where your muzzle empties are located. This is often the elevation subpart. Subpart_Boomsticks must be written as Boomsticks.
                         AzimuthPartId = "None", // Your Rotating Subpart, the bit that moves sideways.
                         ElevationPartId = "None",// Your Elevating Subpart, that bit that moves up.
                         DurabilityMod = 0.25f, // GeneralDamageMultiplier, 0.25f = 25% damage taken.
-                        IconName = "TestIcon.dds" // Overlay for block inventory slots, like reactors, refineries, etc.  Looks in mod root folder\Textures\GUI\Icons\
+                        IconName = "TestIcon.dds" // Overlay for block inventory slots, like reactors, refineries, etc.
                     },
-                    
                  },
                 Muzzles = new[] {
-                    "muzzle_barrel_001", // Where your Projectiles spawn. Use numbers not Letters. IE Muzzle_01 not Muzzle_A
-                    "muzzle_barrel_002",
-                    "muzzle_barrel_003",
-                    "muzzle_barrel_004",
-                    "muzzle_barrel_005",
-                    "muzzle_barrel_006",
+                    "muzzle", // Where your Projectiles spawn. Use numbers not Letters. IE Muzzle_01 not Muzzle_A
                 },
                 Ejector = "", // Optional; empty from which to eject "shells" if specified.
-                Scope = "camera", // Where line of sight checks are performed from. Must be clear of block collision.
+                Scope = "muzzle", // Where line of sight checks are performed from. Must be clear of block collision.
             },
             Targeting = new TargetingDef
             {
                 Threats = new[] {
-                    Grids, // Types of threat to engage: Grids, Projectiles, Characters, Meteors, Neutrals, ScanRoid, ScanPlanet, ScanFriendlyCharacter, ScanFriendlyGrid, ScanEnemyCharacter, ScanEnemyGrid, ScanNeutralCharacter, ScanNeutralGrid, ScanUnOwnedGrid, ScanOwnersGrid
+                    Neutrals, Grids,  // Types of threat to engage: Grids, Projectiles, Characters, Meteors, Neutrals
                 },
                 SubSystems = new[] {
-                    Thrust, Utility, Offense, Power, Production, Any, // Subsystem targeting priority: Offense, Utility, Power, Production, Thrust, Jumping, Steering, Any
+                    Any, // Subsystem targeting priority: Offense, Utility, Power, Production, Thrust, Jumping, Steering, Any
                 },
-                ClosestFirst = true, // Tries to pick closest targets first (blocks on grids, projectiles, etc...).
+                ClosestFirst = false, // Tries to pick closest targets first (blocks on grids, projectiles, etc...).
                 IgnoreDumbProjectiles = false, // Don't fire at non-smart projectiles.
                 LockedSmartOnly = false, // Only fire at smart projectiles that are locked on to parent grid.
-                MinimumDiameter = 0, // Minimum diameter of threat to engage.
-                MaximumDiameter = 0, // Maximum diameter of threat to engage; 0 = unlimited.
-                MaxTargetDistance = 0, // Maximum distance at which targets will be automatically shot at; 0 = unlimited.
+                MinimumDiameter = 0, // Minimum radius of threat to engage.
+                MaximumDiameter = 0, // Maximum radius of threat to engage; 0 = unlimited.
+                MaxTargetDistance = 5000, // Maximum distance at which targets will be automatically shot at; 0 = unlimited.
                 MinTargetDistance = 0, // Minimum distance at which targets will be automatically shot at.
-                TopTargets = 4, // Number of potential grid targets to randomize, then go in list order ; 0 = no randomization, goes in order of SortedThreats list
-                CycleTargets = 0, // Number of targets to check per acquire attempt before giving up for the remainder of the tick and re-rolling any RNG; 0 = unlimited
-                TopBlocks = 8, // Number of potential block targets to randomize, then go in list order; 0 = no randomization, goes in order of internal lists for block subtypes found
-                CycleBlocks = 0, // Number of blocks to check per acquire attempt before giving up for the remainder of the tick and re-rolling any RNG; 0 = unlimited
+                TopTargets = 4, // Maximum number of targets to randomize between; 0 = unlimited.
+                TopBlocks = 8, // Maximum number of blocks to randomize between; 0 = unlimited.
                 StopTrackingSpeed = 0, // Do not track threats traveling faster than this speed; 0 = unlimited.
-                UniqueTargetPerWeapon = false, // only applies to multi-weapon blocks 
-                MaxTrackingTime = 0, // After this time has been reached the weapon will stop tracking existing target and scan for a new one
-                ShootBlanks = false, // Do not generate projectiles when shooting
-                FocusOnly = false, // This weapon can only track focus targets.
-                EvictUniqueTargets = false, // if this is set it will evict any weapons set to UniqueTargetPerWeapon unless they to have this set
-                Communications = new CommunicationDef 
-                {
-                    StoreTargets = false, // Pushes its current target to the grid/construct so that other slaved weapons can fire on it.
-                    StorageLimit = 0, // The limit at which this weapon will no longer export targets onto the channel.
-                    MaxConnections = 0, // 0 is unlimited, this value determines the maximum number of weapons that can link up to another weapon.
-                    StoreLimitPerBlock = false, // Setting this to true will switch the StorageLimit from being per Location to per block per Location.
-                    StorageLocation = "", // This location ID is used either by the master weapon (if ExportTargets = true) or the slave weapon (if its false).  This is shared across the conncted grids.
-                    Mode = NoComms, // NoComms, BroadCast, LocalNetwork, Repeater, Relay, Jamming
-                    TargetPersists = false, // Whether or not the weapon will retain its existing target even if the source of the target releases theirs.
-                    Security = Private, // Public, Private, Secure
-                    BroadCastChannel = "", // If defined you will broadcast to all other scanners on this channel.
-                    BroadCastRange = 0, // This is the range that you will broadcast up too.  Note that this value applies to both the sender and receiver, both range requirements must be met. 
-                    JammingStrength = 0, // If Mode is set to jamming, then this value will decrease the "range" of broadcasts.  Strength falls off at sqr of the distance.
-                    RelayChannel = "", // If defined this channel will be used to relay any targets it seems on the broadcast channel.
-                    RelayRange = 0, // This defines the range that any broadcasts will be relayed.  Note that this channel id is seen as the "broadcast" channel for all receivers, broadcast range requirements apply. 
-                },
             },
             HardPoint = new HardPointDef
             {
-                PartName = "Gatling", // Name of the weapon in terminal, should be unique for each weapon definition that shares a SubtypeId (i.e. multiweapons).
+                PartName = "Spinal Artillery", // Name of the weapon in terminal, should be unique for each weapon definition that shares a SubtypeId (i.e. multiweapons).
                 DeviateShotAngle = 0.2f, // Projectile inaccuracy in degrees.
                 AimingTolerance = 1f, // How many degrees off target a turret can fire at. 0 - 180 firing angle.
                 AimLeadingPrediction = Accurate, // Level of turret aim prediction; Off (aim straight at target), Basic (doesn't account for target acceleration), Accurate, Advanced (these last two are identical)
@@ -94,41 +62,34 @@ namespace SpinalArtillery.CoreParts {
                 CanShootSubmerged = false, // Whether the weapon can be fired underwater when using WaterMod.
                 NpcSafe = false, // This is how you tell npc modders that your wep was designed with them in mind, unless they tell you otherwise set this to false.
                 ScanTrackOnly = false, // This weapon only scans and tracks entities, this disables un-needed functionality and customizes for this purpose. 
+                
                 Ui = new UiDef
                 {
                     RateOfFire = false, // Enables terminal slider for changing rate of fire.
-                    RateOfFireMin = 0.0f, // Sets the minimum limit for the rate of fire slider, default is 0.  Range is 0-1f.
+                    DamageModifier = false, // Enables terminal slider for changing damage per shot.
                     ToggleGuidance = false, // Enables terminal option to disable smart projectile guidance.
                     EnableOverload = false, // Enables terminal option to turn on Overload; this allows energy weapons to double damage per shot, at the cost of quadrupled power draw and heat gain, and 2% self damage on overheat.
-                    AlternateUi = false, // This simplifies and customizes the block controls for alternative weapon purposes,   
-                    DisableStatus = false, // Do not display weapon status NoTarget, Reloading, NoAmmo, etc..
-                    DisableSupportingPD = false, // If true, the supporting point defense terminal option will be removed and this weapon will only target projectiles targeting the construct it's placed on
-                    ProhibitShotDelay = false, // If true, removes shot delay options for players.  This may be desirable for weapons that use heat or bursts as a balance mechanic and deliberately do not offer the ROF slider.
-                    ProhibitBurstCount = false, // If true, removes burst shot count options for players.
                 },
                 Ai = new AiDef
                 {
-                    TrackTargets = true, // Whether this weapon tracks its own targets, or (for multiweapons) relies on the weapon with PrimaryTracking enabled for target designation. Turrets Need this set to True.
-                    TurretAttached = true, // Whether this weapon is a turret and should have the UI and API options for such. Turrets Need this set to True.
-                    TurretController = true, // Whether this weapon can physically control the turret's movement. Turrets Need this set to True.
-                    PrimaryTracking = true, // For multiweapons: whether this weapon should designate targets for other weapons on the platform without their own tracking.
+                    TrackTargets = false, // Whether this weapon tracks its own targets, or (for multiweapons) relies on the weapon with PrimaryTracking enabled for target designation. Turrets Need this set to True.
+                    TurretAttached = false, // Whether this weapon is a turret and should have the UI and API options for such. Turrets Need this set to True.
+                    TurretController = false, // Whether this weapon can physically control the turret's movement. Turrets Need this set to True.
+                    PrimaryTracking = false, // For multiweapons: whether this weapon should designate targets for other weapons on the platform without their own tracking.
                     LockOnFocus = false, // If enabled, weapon will only fire at targets that have been HUD selected AND locked onto by pressing Numpad 0.
                     SuppressFire = false, // If enabled, weapon can only be fired manually.
                     OverrideLeads = false, // Disable target leading on fixed weapons, or allow it for turrets.
-                    DefaultLeadGroup = 0, // Default LeadGroup setting, range 0-5, 0 is disables lead group.  Only useful for fixed weapons or weapons set to OverrideLeads.
-                    TargetGridCenter = false, // Does not target blocks, instead it targets grid center.
-                    PainterUseMaxTargeting = false, //If enabled, painter will utilize the lesser of the weapons targeting max dist or projectile trajectory.  By default painter can be used out to the projectiles max trajectory.
                 },
                 HardWare = new HardwareDef
                 {
-                    RotateRate = 0.1f, // Max traversal speed of azimuth subpart in radians per tick (0.1 is approximately 360 degrees per second).
-                    ElevateRate = 0.1f, // Max traversal speed of elevation subpart in radians per tick.
-                    MinAzimuth = -180, // Az/Ele figures are in degrees
-                    MaxAzimuth = 180,
-                    MinElevation = -9,
-                    MaxElevation = 50,
+                    RotateRate = 0f, // Max traversal speed of azimuth subpart in radians per tick (0.1 is approximately 360 degrees per second).
+                    ElevateRate = 0f, // Max traversal speed of elevation subpart in radians per tick.
+                    MinAzimuth = 0,
+                    MaxAzimuth = 0,
+                    MinElevation = 0,
+                    MaxElevation = 0,
                     HomeAzimuth = 0, // Default resting rotation angle
-                    HomeElevation = 15, // Default resting elevation
+                    HomeElevation = 0, // Default resting elevation
                     InventorySize = 1f, // Inventory capacity in kL.
                     IdlePower = 0.25f, // Constant base power draw in MW.
                     FixedOffset = false, // Deprecated.
@@ -136,12 +97,11 @@ namespace SpinalArtillery.CoreParts {
                     Type = BlockWeapon, // What type of weapon this is; BlockWeapon, HandWeapon, Phantom 
                     CriticalReaction = new CriticalDef
                     {
-                        Enable = false, // Enables critical reaction on destruction.  Set true for warheads OR weapons that should explode dramatically on destruction.
+                        Enable = false, // Enables Warhead behaviour.
                         DefaultArmedTimer = 120, // Sets default countdown duration.
                         PreArmed = false, // Whether the warhead is armed by default when placed. Best left as false.
-                        TerminalControls = true, // Adds terminal controls for arming and detonation and indicates to WeaponCore that this is a warhead.  Leave this false for normal weapons intended to explode on destruction
-                        AmmoRound = "AmmoType2", // Optional. If specified, the warhead will always use this ammo on detonation rather than the first hardpoint usable ammo type.  
-                                                 //Note that normal ammo types fired from a weapon may not interact as desired.  See wiki for example of container + frag ammo types for a critical reaction/warhead
+                        TerminalControls = true, // Whether the warhead should have terminal controls for arming and detonation.
+                        AmmoRound = "", // Optional. If specified, the warhead will always use this ammo on detonation rather than the currently selected ammo.
                     },
                 },
                 Other = new OtherDef
@@ -196,7 +156,7 @@ namespace SpinalArtillery.CoreParts {
                     ReloadSound = "", // Sound SubtypeID, for when your Weapon is in a reloading state
                     NoAmmoSound = "",
                     HardPointRotationSound = "WepTurretGatlingRotate", // Audio played when turret is moving.
-                    BarrelRotationSound = "WepShipGatlingRotation",
+                    BarrelRotationSound = "",
                     FireSoundEndDelay = 120, // How long the firing audio should keep playing after firing stops. Measured in game ticks(6 = 100ms, 60 = 1 seconds, etc..).
                     FireSoundNoBurst = true, // Don't stop firing sound from looping when delaying after burst.
                 },
@@ -216,26 +176,10 @@ namespace SpinalArtillery.CoreParts {
                             Scale = 1f, // Scale of effect.
                         },
                     },
-                    Effect2 = new ParticleDef
-                    {
-                        Name = "",
-                        Color = Color(red: 0, green: 0, blue: 0, alpha: 1),
-                        Offset = Vector(x: 0, y: 0, z: 0),
-                        DisableCameraCulling = false, // If not true will not cull when not in view of camera, be careful with this and only use if you know you need it
-                        Extras = new ParticleOptionDef
-                        {
-                            Loop = false, // Set this to the same as in the particle sbc!
-                            Restart = false,
-                            MaxDistance = 800,
-                            MaxDuration = 0,
-                            Scale = 1f,
-                        },
-                    },
                 },
             },
             Ammos = new[] {
                 AmmoType1, 
-                AmmoType2, // Must list all primary, shrapnel, and pattern ammos.
             },
             //Animations = Weapon75_Animation,
             //Upgrades = UpgradeModules,
