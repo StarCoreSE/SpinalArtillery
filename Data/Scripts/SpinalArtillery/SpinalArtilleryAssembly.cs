@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sandbox.ModAPI;
 using SpinalArtillery.API;
@@ -42,7 +43,7 @@ namespace SpinalArtillery
             "SpinalGunpowderPacker",
         };
 
-        internal int LoaderStackSize => _blockCounts.Sum(kvp => LoaderStackSubtypes.Contains(kvp.Key) ? kvp.Value : 0);
+        internal int LoaderStackSize => _blockCounts.Sum(kvp => Enumerable.Contains(LoaderStackSubtypes, kvp.Key) ? kvp.Value : 0);
         internal float StackSizeMultiplier => 1 - 0.01f * LoaderStackSize;
 
 
@@ -55,6 +56,12 @@ namespace SpinalArtillery
         // SpinalExplosivePacker
         internal float AreaDmg => _blockCounts["SpinalExplosivePacker"] * StackSizeMultiplier * 1000;
         internal float AreaRadius => _blockCounts["SpinalExplosivePacker"] * StackSizeMultiplier;
+        internal float Velocity => (float) (500 * (_blockCounts["SpinalBarrelBlock"]*(1-Math.Pow(Math.E, -0.1*_blockCounts["SpinalGunpowderPacker"]*StackSizeMultiplier))) / (2+2*Math.Pow(Math.E, -0.1*_blockCounts["SpinalGunpowderPacker"]*StackSizeMultiplier)));
+        internal float BaseDamage => 15*Velocity;
+        internal float Accuracy => 0;
+        internal float Recoil => 0;
+        internal float MagazineSize => 0;
+        internal float ReloadRate => 0;
 
         #endregion
 
@@ -72,6 +79,7 @@ namespace SpinalArtillery
             MyAPIGateway.Utilities.ShowNotification("Stack Size: " + LoaderStackSize, 1000/60);
             MyAPIGateway.Utilities.ShowNotification("AreaDmg: " + WcApi.GetAreaDmgMultiplier((MyEntity) BaseBlock), 1000/60);
             MyAPIGateway.Utilities.ShowNotification("AreaRadius: " + WcApi.GetAreaRadiusMultiplier((MyEntity) BaseBlock), 1000/60);
+            MyAPIGateway.Utilities.ShowNotification("Velocity: " + WcApi.GetVelocityMultiplier((MyEntity) BaseBlock), 1000/60);
             //foreach (var blocktype in _blockCounts.Where(kvp => kvp.Value != 0))
             //    MyAPIGateway.Utilities.ShowNotification($"{blocktype.Key}: {blocktype.Value}", 1000/60);
 
@@ -117,6 +125,8 @@ namespace SpinalArtillery
             switch (blockType)
             {
                 case "SpinalBarrelBlock":
+                    WcApi.SetVelocityMultiplier((MyEntity) BaseBlock, Velocity);
+                    WcApi.SetBaseDmgMultiplier((MyEntity) BaseBlock, BaseDamage);
                     break;
                 case "SpinalCoilPart":
                     break;
